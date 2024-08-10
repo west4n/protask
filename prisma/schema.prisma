@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Board {
+  id            String @id @default(cuid())
+  orgId         String @map("org_id")
+  title         String
+  imageId       String @map("image_id")
+  imageThumbUrl String @map("image_thumb_url") @db.Text
+  imageFullUrl  String @map("image_full_url") @db.Text
+  imageUserName String @map("image_user_name") @db.Text
+  imageLinkHTML String @map("image_link_html") @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  lists List[]
+}
+
+model List {
+  id    String @id @default(cuid())
+  title String
+  order Int
+
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId String @map("board_id")
+
+  cards Card[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([boardId])
+}
+
+model Card {
+  id          String  @id @default(cuid())
+  title       String
+  order       Int
+  description String? @db.Text
+
+  list   List   @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId String @map("list_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([listId])
+}
+
+enum ACTION {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+enum ENTITY_TYPE {
+  BOARD @map("Доска")
+  LIST  @map("Список")
+  CARD  @map("Карточка")
+}
+
+model AuditLog {
+  id          String      @id @default(cuid())
+  orgId       String      @map("org_id")
+  action      ACTION
+  entityId    String      @map("entity_id")
+  entityTitle String      @map("entity_title") @db.Text
+  entityType  ENTITY_TYPE @map("entity_type")
+  userId      String      @map("user_id")
+  userImage   String      @map("user_image") @db.Text
+  userName    String      @map("user_name") @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
