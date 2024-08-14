@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 export const CreateList = z.object({
 	boardId: z.string(),
+	telegramId: z.string(),
 	title: z
 		.string({
 			required_error: 'Заголовок обязателен',

@@ -33,6 +33,7 @@ export const ListForm = () => {
 
 	const formRef = useRef<ElementRef<'form'>>(null)
 	const inputRef = useRef<ElementRef<'input'>>(null)
+	const telegramRef = useRef<ElementRef<'input'>>(null)
 
 	const enableEditing = () => {
 		setIsEditing(true)
@@ -57,8 +58,9 @@ export const ListForm = () => {
 	const onSubmit = (formData: FormData) => {
 		const title = formData.get('title') as string
 		const boardId = formData.get('boardId') as string
+		const telegramId = formData.get('telegramId') as string
 
-		execute({ title, boardId })
+		execute({ title, boardId, telegramId })
 	}
 
 	if (isEditing) {
@@ -75,6 +77,14 @@ export const ListForm = () => {
 						id='title'
 						className='text-sm px-2 py-1 h-7 font-medium border-transparent hover:border-input focus:border-input transition'
 						placeholder='Введите название списка...'
+					/>
+
+					<FormInput
+						ref={telegramRef}
+						errors={fieldErrors}
+						id='telegramId'
+						className='text-sm px-2 py-1 h-7 font-medium border-transparent hover:border-input focus:border-input transition'
+						placeholder='Введите id чата...'
 					/>
 					<input hidden value={params?.boardId} name='boardId' />
 					<div className='flex items-center gap-x-1'>

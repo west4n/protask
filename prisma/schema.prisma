@@ -30,9 +30,10 @@ model Board {
 }
 
 model List {
-  id    String @id @default(cuid())
-  title String
-  order Int
+  id         String  @id @default(cuid())
+  title      String
+  telegramId String? @map("telegram_id")
+  order      Int
 
   board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId String @map("board_id")

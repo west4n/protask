@@ -20,7 +20,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 		}
 	}
 
-	const { title, boardId } = data
+	const { title, boardId, telegramId } = data
 
 	let list
 
@@ -56,6 +56,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 			data: {
 				title,
 				boardId,
+				telegramId,
 				order: newOrder,
 			},
 		})
