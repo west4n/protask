@@ -2,6 +2,7 @@
 
 import { auth } from '@clerk/nextjs/server'
 import { revalidatePath } from 'next/cache'
+import { telegramBot } from '@/lib/telegram-bot'
 
 import { db } from '@/lib/db'
 import { createSafeAction } from '@/lib/create-safe-action'
@@ -55,6 +56,20 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 				order: newOrder,
 			},
 		})
+
+		console.log(list.telegramId)
+
+		if (list.telegramId) {
+			const message = `В списке <b>"${list.title}"</b> создана карточка <b>"${card.title}"</b>. Ожидайте получения дополнительной информации.`
+			try {
+				await telegramBot.sendMessage(list.telegramId, message, {
+					parse_mode: 'HTML',
+				})
+				console.log('Telegram message sent')
+			} catch (sendError) {
+				console.error('Telegram message error', sendError)
+			}
+		}
 
 		await createAuditLog({
 			entityId: card.id,
