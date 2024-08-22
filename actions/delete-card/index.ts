@@ -4,6 +4,7 @@ import { auth } from '@clerk/nextjs/server'
 import { revalidatePath } from 'next/cache'
 
 import { db } from '@/lib/db'
+import { telegramBot } from '@/lib/telegram-bot'
 import { createSafeAction } from '@/lib/create-safe-action'
 
 import { DeleteCard } from './schema'
@@ -35,6 +36,33 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 				},
 			},
 		})
+
+		const list = await db.list.findUnique({
+			where: {
+				id: card.listId,
+				board: {
+					orgId,
+				},
+			},
+		})
+
+		if (!list) {
+			return {
+				error: 'Список не найден',
+			}
+		}
+
+		if (list.telegramId) {
+			const message = `Карточка <b>${card.title}</b> была удалена`
+			try {
+				await telegramBot.sendMessage(list.telegramId, message, {
+					parse_mode: 'HTML',
+				})
+				console.log('Telegram message sent')
+			} catch (sendError) {
+				console.error('Telegram message error', sendError)
+			}
+		}
 
 		await createAuditLog({
 			entityTitle: card.title,

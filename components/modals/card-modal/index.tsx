@@ -35,7 +35,7 @@ export const CardModal = () => {
 					<div className='col-span-3'>
 						<div className='w-full space-y-6'>
 							{!cardData ? (
-								<Description.Skeletnon />
+								<Description.Skeleton />
 							) : (
 								<Description data={cardData} />
 							)}

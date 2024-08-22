@@ -50,7 +50,7 @@ model Card {
   id          String  @id @default(cuid())
   title       String
   order       Int
-  description String? @db.Text
+  description String?
 
   list   List   @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId String @map("list_id")
