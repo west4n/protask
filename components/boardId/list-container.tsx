@@ -57,7 +57,6 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
 			return
 		}
 
-		// If dropped in the same position
 		if (
 			destination.droppableId === source.droppableId &&
 			destination.index === source.index
@@ -65,7 +64,6 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
 			return
 		}
 
-		// User moves a list
 		if (type === 'list') {
 			const items = reorder(orderedData, source.index, destination.index).map(
 				(item, index) => ({ ...item, order: index })
@@ -75,11 +73,9 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
 			executeUpdateListOrder({ items, boardId })
 		}
 
-		// User moves a card
 		if (type === 'card') {
 			let newOrderedData = [...orderedData]
 
-			// Source and destination list
 			const sourceList = newOrderedData.find(
 				list => list.id === source.droppableId
 			)
@@ -91,17 +87,14 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
 				return
 			}
 
-			// Check if cards exists on the sourceList
 			if (!sourceList.cards) {
 				sourceList.cards = []
 			}
 
-			// Check if cards exists on the destList
 			if (!destList.cards) {
 				destList.cards = []
 			}
 
-			// Moving the card in the same list
 			if (source.droppableId === destination.droppableId) {
 				const reorderedCards = reorder(
 					sourceList.cards,
@@ -118,24 +111,19 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
 				setOrderedData(newOrderedData)
 				executeUpdateCardOrder({
 					boardId: boardId,
-					items: reorderedCards,
+					items: [reorderedCards[source.index]], // Передаем только перемещенную карточку
 				})
-				// User moves the card to another list
 			} else {
-				// Remove card from the source list
 				const [movedCard] = sourceList.cards.splice(source.index, 1)
 
-				// Assign the new listId to the moved card
 				movedCard.listId = destination.droppableId
 
-				// Add card to the destination list
 				destList.cards.splice(destination.index, 0, movedCard)
 
 				sourceList.cards.forEach((card, idx) => {
 					card.order = idx
 				})
 
-				// Update the order for each card in the destination list
 				destList.cards.forEach((card, idx) => {
 					card.order = idx
 				})
@@ -143,7 +131,7 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
 				setOrderedData(newOrderedData)
 				executeUpdateCardOrder({
 					boardId: boardId,
-					items: [...sourceList.cards, ...destList.cards],
+					items: [movedCard], // Передаем только перемещенную карточку
 				})
 			}
 		}

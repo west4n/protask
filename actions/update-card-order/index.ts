@@ -25,6 +25,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 	let updatedCards
 
 	try {
+		// Обновляем только одну карточку
 		const transaction = items.map(card =>
 			db.card.update({
 				where: {
@@ -81,6 +82,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 			}
 		}
 	} catch (error) {
+		console.error('Error updating cards:', error)
 		return {
 			error: 'Ошибка при обновлении карточек',
 		}
