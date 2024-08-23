@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { nullable, z } from 'zod'
 
 export const UpdateCardOrder = z.object({
 	items: z.array(
@@ -6,6 +6,7 @@ export const UpdateCardOrder = z.object({
 			id: z.string(),
 			title: z.string(),
 			order: z.number(),
+			description: z.string().nullable(),
 			listId: z.string(),
 			createdAt: z.date(),
 			updatedAt: z.date(),

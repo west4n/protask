@@ -66,7 +66,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 			: 'Карточка без описания'
 
 		if (list.telegramId) {
-			const message = `В карточке <b>"${card.title}"</b> произошло обновление. Новое описание: <pre>${messageText}</pre>`
+			const message = `<pre>${messageText}</pre>`
 			try {
 				await telegramBot.sendMessage(list.telegramId, message, {
 					parse_mode: 'HTML',

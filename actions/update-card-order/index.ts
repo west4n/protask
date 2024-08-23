@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache'
 
 import { db } from '@/lib/db'
 import { createSafeAction } from '@/lib/create-safe-action'
+import { telegramBot } from '@/lib/telegram-bot'
 
 import { UpdateCardOrder } from './schema'
 import { InputType, ReturnType } from './types'
@@ -41,6 +42,31 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 		)
 
 		updatedCards = await db.$transaction(transaction)
+
+		for (const card of items) {
+			const list = await db.list.findUnique({
+				where: {
+					id: card.listId,
+				},
+				select: {
+					telegramId: true,
+					title: true,
+				},
+			})
+
+			if (list?.telegramId) {
+				const message = `<pre>${card.description}</pre>`
+
+				try {
+					await telegramBot.sendMessage(list.telegramId, message, {
+						parse_mode: 'HTML',
+					})
+					console.log('Telegram message sent')
+				} catch (sendError) {
+					console.error('Telegram message error', sendError)
+				}
+			}
+		}
 	} catch (error) {
 		return {
 			error: 'Ошибка при обновлении карточек',
