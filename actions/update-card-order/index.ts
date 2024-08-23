@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { db } from '@/lib/db'
 import { createSafeAction } from '@/lib/create-safe-action'
 import { telegramBot } from '@/lib/telegram-bot'
+import { convert } from 'html-to-text'
 
 import { UpdateCardOrder } from './schema'
 import { InputType, ReturnType } from './types'
@@ -55,7 +56,16 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 			})
 
 			if (list?.telegramId) {
-				const message = `<pre>${card.description}</pre>`
+				const description = card.description
+					? convert(card.description, {
+							wordwrap: 130,
+							selectors: [
+								{ selector: 'a', options: { hideLinkHrefIfSameAsText: true } },
+							],
+					  })
+					: 'Карточка без описания'
+
+				const message = `<pre>${description}</pre>`
 
 				try {
 					await telegramBot.sendMessage(list.telegramId, message, {
