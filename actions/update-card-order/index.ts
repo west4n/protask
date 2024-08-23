@@ -55,6 +55,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 				},
 			})
 
+			console.log('Fetched card data:', card)
+			console.log('Fetched list data:', list)
+
 			if (list?.telegramId) {
 				const description = card.description
 					? convert(card.description, {
