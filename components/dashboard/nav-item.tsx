@@ -43,7 +43,7 @@ export const NavItem = ({
 			href: `/organization/${organization.id}`,
 		},
 		{
-			label: 'Активность',
+			label: 'Контрагенты',
 			icon: <Activity className='size-4 mr-2' />,
 			href: `/organization/${organization.id}/activity`,
 		},
@@ -51,11 +51,6 @@ export const NavItem = ({
 			label: 'Настройки',
 			icon: <Settings className='size-4 mr-2' />,
 			href: `/organization/${organization.id}/settings`,
-		},
-		{
-			label: 'Счёт',
-			icon: <CreditCard className='size-4 mr-2' />,
-			href: `/organization/${organization.id}/billing`,
 		},
 	]
 

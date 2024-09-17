@@ -56,30 +56,30 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 				},
 			})
 
-			console.log('Fetched card data:', card)
-			console.log('Fetched list data:', list)
+			// console.log('Fetched card data:', card)
+			// console.log('Fetched list data:', list)
 
-			if (list?.telegramId) {
-				const description = card.description
-					? convert(card.description, {
-							wordwrap: 130,
-							selectors: [
-								{ selector: 'a', options: { hideLinkHrefIfSameAsText: true } },
-							],
-					  })
-					: 'Карточка без описания'
+			// if (list?.telegramId) {
+			// 	const description = card.description
+			// 		? convert(card.description, {
+			// 				wordwrap: 130,
+			// 				selectors: [
+			// 					{ selector: 'a', options: { hideLinkHrefIfSameAsText: true } },
+			// 				],
+			// 		  })
+			// 		: 'Карточка без описания'
 
-				const message = `<pre>${description}</pre>`
+			// 	const message = `<pre>${description}</pre>`
 
-				try {
-					await telegramBot.sendMessage(list.telegramId, message, {
-						parse_mode: 'HTML',
-					})
-					console.log('Telegram message sent')
-				} catch (sendError) {
-					console.error('Telegram message error', sendError)
-				}
-			}
+			// 	try {
+			// 		await telegramBot.sendMessage(list.telegramId, message, {
+			// 			parse_mode: 'HTML',
+			// 		})
+			// 		console.log('Telegram message sent')
+			// 	} catch (sendError) {
+			// 		console.error('Telegram message error', sendError)
+			// 	}
+			// }
 		}
 	} catch (error) {
 		console.error('Error updating cards:', error)

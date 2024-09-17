@@ -1,6 +1,6 @@
 'use client'
 
-import { Copy, Trash } from 'lucide-react'
+import { Copy, Send, Trash } from 'lucide-react'
 import { useAction } from '@/hooks/use-action'
 import { useParams } from 'next/navigation'
 
@@ -11,7 +11,7 @@ import { deleteCard } from '@/actions/delete-card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
-import { useCardModal } from '@/hooks/use-card-modal'
+import { sendTelegram } from '@/actions/send-telegram'
 
 interface ActionProps {
 	data: CardWithList
@@ -19,14 +19,12 @@ interface ActionProps {
 
 export const Actions = ({ data }: ActionProps) => {
 	const params = useParams()
-	const { onClose } = useCardModal()
 
 	const { execute: executeCopyCard, isLoading: isLoadingCopy } = useAction(
 		copyCard,
 		{
 			onSuccess(data) {
 				toast.success(`Карточка "${data.title}" скопирована! 😎`)
-				onClose()
 			},
 			onError(error) {
 				toast.error(error)
@@ -38,7 +36,6 @@ export const Actions = ({ data }: ActionProps) => {
 		{
 			onSuccess(data) {
 				toast.success(`Карточка "${data.title}" удалена! 😎`)
-				onClose()
 			},
 			onError(error) {
 				toast.error(error)
@@ -46,21 +43,40 @@ export const Actions = ({ data }: ActionProps) => {
 		}
 	)
 
-	const onCopy = () => {
+	const { execute: executeSendTelegram, isLoading: isLoadingTelegram } =
+		useAction(sendTelegram, {
+			onSuccess(data) {
+				toast.success(`Карточка отправлена в телеграм! 😎`)
+			},
+			onError(error) {
+				toast.error(error)
+			},
+		})
+
+	const onCopy = (e: React.MouseEvent) => {
+		e.stopPropagation()
 		const boardId = params.boardId as string
 
 		executeCopyCard({ id: data.id, boardId })
 	}
 
-	const onDelete = () => {
+	const onDelete = (e: React.MouseEvent) => {
+		e.stopPropagation()
 		const boardId = params.boardId as string
 
 		executeDeleteCard({ id: data.id, boardId })
 	}
 
+	const onSendTelegram = (e: React.MouseEvent) => {
+		e.stopPropagation()
+
+		const boardId = params.boardId as string
+
+		executeSendTelegram({ id: data.id, boardId })
+	}
+
 	return (
 		<div className='space-y-2 mt-2'>
-			<p className='text-sm font-semibold'>Действия</p>
 			<Button
 				onClick={onCopy}
 				disabled={isLoadingCopy}
@@ -80,6 +96,16 @@ export const Actions = ({ data }: ActionProps) => {
 			>
 				<Trash className='size-4 mr-2' />
 				Удалить
+			</Button>
+			<Button
+				onClick={onSendTelegram}
+				disabled={isLoadingDelete}
+				variant='gray'
+				size='inline'
+				className='w-full justify-start'
+			>
+				<Send className='size-4 mr-2' />
+				Отправить в чат
 			</Button>
 		</div>
 	)

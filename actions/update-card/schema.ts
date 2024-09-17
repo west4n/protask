@@ -1,3 +1,4 @@
+import { EXECUTOR } from '@prisma/client'
 import { z } from 'zod'
 
 export const UpdateCard = z.object({
@@ -14,4 +15,7 @@ export const UpdateCard = z.object({
 			})
 			.min(3, 'Заголовок слишком короткий.')
 	),
+	executor: z.optional(z.nativeEnum(EXECUTOR)),
+	counteragent: z.optional(z.string()),
+	date: z.optional(z.date()),
 })

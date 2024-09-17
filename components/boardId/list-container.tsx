@@ -111,7 +111,7 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
 				setOrderedData(newOrderedData)
 				executeUpdateCardOrder({
 					boardId: boardId,
-					items: [reorderedCards[source.index]], // Передаем только перемещенную карточку
+					items: reorderedCards, // Передаем только перемещенную карточку
 				})
 			} else {
 				const [movedCard] = sourceList.cards.splice(source.index, 1)
@@ -131,7 +131,7 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
 				setOrderedData(newOrderedData)
 				executeUpdateCardOrder({
 					boardId: boardId,
-					items: [movedCard], // Передаем только перемещенную карточку
+					items: [...sourceList.cards, ...destList.cards], // Передаем только перемещенную карточку
 				})
 			}
 		}

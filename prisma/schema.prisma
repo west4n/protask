@@ -47,10 +47,13 @@ model List {
 }
 
 model Card {
-  id          String  @id @default(cuid())
-  title       String
-  order       Int
-  description String?
+  id           String    @id @default(cuid())
+  title        String
+  order        Int
+  description  String?
+  executor     EXECUTOR  @default(NOTHING)
+  counteragent String?
+  date         DateTime?
 
   list   List   @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId String @map("list_id")
@@ -73,6 +76,12 @@ enum ENTITY_TYPE {
   CARD  @map("Карточка")
 }
 
+enum EXECUTOR {
+  ARTEM   @map("Артём")
+  ANDREY  @map("Андрей")
+  NOTHING @map("Нету")
+}
+
 model AuditLog {
   id          String      @id @default(cuid())
   orgId       String      @map("org_id")
@@ -83,6 +92,14 @@ model AuditLog {
   userId      String      @map("user_id")
   userImage   String      @map("user_image") @db.Text
   userName    String      @map("user_name") @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model Counteragent {
+  id   Int    @id @default(autoincrement())
+  name String
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

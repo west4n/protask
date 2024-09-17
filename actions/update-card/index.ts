@@ -56,26 +56,26 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 			}
 		}
 
-		const messageText = card.description
-			? convert(card.description, {
-					wordwrap: 130,
-					selectors: [
-						{ selector: 'a', options: { hideLinkHrefIfSameAsText: true } },
-					],
-			  })
-			: 'Карточка без описания'
+		// const messageText = card.description
+		// 	? convert(card.description, {
+		// 			wordwrap: 130,
+		// 			selectors: [
+		// 				{ selector: 'a', options: { hideLinkHrefIfSameAsText: true } },
+		// 			],
+		// 	  })
+		// 	: 'Карточка без описания'
 
-		if (list.telegramId) {
-			const message = `<pre>${messageText}</pre>`
-			try {
-				await telegramBot.sendMessage(list.telegramId, message, {
-					parse_mode: 'HTML',
-				})
-				console.log('Telegram message sent')
-			} catch (sendError) {
-				console.error('Telegram message error', sendError)
-			}
-		}
+		// if (list.telegramId) {
+		// 	const message = `<pre>${messageText}</pre>`
+		// 	try {
+		// 		await telegramBot.sendMessage(list.telegramId, message, {
+		// 			parse_mode: 'HTML',
+		// 		})
+		// 		console.log('Telegram message sent')
+		// 	} catch (sendError) {
+		// 		console.error('Telegram message error', sendError)
+		// 	}
+		// }
 
 		await createAuditLog({
 			entityTitle: card.title,
