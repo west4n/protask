@@ -32,7 +32,10 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<ClerkProvider afterSignOutUrl='/' localization={customLocalization}>
+		<ClerkProvider
+			afterSignOutUrl='/'
+			localization={customLocalization as any}
+		>
 			<html lang='ru'>
 				<body className={GeistSans.className}>
 					<QueryProvider>
